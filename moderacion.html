@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Moderación — La Patronoteca</title>
+<title>Moderación - La Patronoteca</title>
 <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,14 +51,26 @@
       </div>
 
       <div id="tab-pending">
-        <h2>Patrones pendientes (<span id="patterns-count">0</span>)</h2>
-        <div id="patterns-list"></div>
+        <div class="filter-options" style="margin-bottom:16px;">
+          <button type="button" class="chip-toggle active" data-pending-sub="patterns">Patrones</button>
+          <button type="button" class="chip-toggle" data-pending-sub="comments">Comentarios</button>
+          <button type="button" class="chip-toggle" data-pending-sub="links">Redes</button>
+        </div>
 
-        <h2>Redes sociales pendientes (<span id="links-count">0</span>)</h2>
-        <div id="links-list"></div>
+        <div id="pending-sub-patterns">
+          <h2>Patrones pendientes (<span id="patterns-count">0</span>)</h2>
+          <div id="patterns-list"></div>
+        </div>
 
-        <h2>Comentarios pendientes (<span id="comments-count">0</span>)</h2>
-        <div id="comments-list-moderation"></div>
+        <div id="pending-sub-comments" hidden>
+          <h2>Comentarios pendientes (<span id="comments-count">0</span>)</h2>
+          <div id="comments-list-moderation"></div>
+        </div>
+
+        <div id="pending-sub-links" hidden>
+          <h2>Redes sociales pendientes (<span id="links-count">0</span>)</h2>
+          <div id="links-list"></div>
+        </div>
       </div>
 
       <div id="tab-published" hidden>
@@ -104,7 +116,7 @@
 
 <footer class="site-footer">
   <div class="container">
-    <p>La Patronoteca — <a href="aviso-legal.html">Aviso legal</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos de la comunidad</a></p>
+    <p>La Patronoteca - <a href="aviso-legal.html">Aviso legal</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos de la comunidad</a></p>
   </div>
   <div class="credit-band">
     <a href="https://linktr.ee/hello.ana.dev" target="_blank" rel="noopener">Sitio web desarrollado por Hello.Ana.Dev</a>

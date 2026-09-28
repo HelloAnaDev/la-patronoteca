@@ -119,7 +119,7 @@ function renderPatterns() {
         Enviado el ${new Date(pattern.created_at).toLocaleString("es-ES")} · IP: ${escapeHtml(pattern.ip_address || "?")}
       </div>
       <h3>${escapeHtml(pattern.short_description)}</h3>
-      <div class="meta">Autor/a: ${escapeHtml(pattern.author_name)} — ${escapeHtml(pattern.author_email)}</div>
+      <div class="meta">Autor/a: ${escapeHtml(pattern.author_name)} - ${escapeHtml(pattern.author_email)}</div>
       ${pattern.long_description ? `<p>${escapeHtml(pattern.long_description)}</p>` : ""}
       ${pattern.original_source ? `<div class="meta"><strong>Fuente original:</strong> ${escapeHtml(pattern.original_source)}</div>` : ""}
 
@@ -213,7 +213,7 @@ function renderVirusTotalDetail(results) {
           const total = Object.values(r.stats).reduce((a, b) => a + b, 0);
           const detectados = malicious + suspicious;
           const link = `https://www.virustotal.com/gui/url-analysis/${r.analysisId}`;
-          return `<div>${escapeHtml(r.path.split("/").pop())}: ${detectados}/${total} motores lo marcan ${detectados ? "sospechoso" : "limpio"} — <a href="${link}" target="_blank" rel="noopener">ver informe completo en VirusTotal</a></div>`;
+          return `<div>${escapeHtml(r.path.split("/").pop())}: ${detectados}/${total} motores lo marcan ${detectados ? "sospechoso" : "limpio"} - <a href="${link}" target="_blank" rel="noopener">ver informe completo en VirusTotal</a></div>`;
         })
         .join("")}
     </div>
@@ -351,7 +351,7 @@ function renderCommunityLinks() {
     card.className = "card moderation-card";
     card.innerHTML = `
       <div class="meta">Enviado el ${new Date(link.created_at).toLocaleString("es-ES")}</div>
-      <h3>${escapeHtml(link.display_name)} — ${escapeHtml(link.network)}</h3>
+      <h3>${escapeHtml(link.display_name)} - ${escapeHtml(link.network)}</h3>
       <p><a href="${link.url}" target="_blank" rel="noopener">${escapeHtml(link.url)}</a></p>
       ${link.description ? `<p>${escapeHtml(link.description)}</p>` : ""}
       ${link.submitter_email ? `<div class="meta">Email: ${escapeHtml(link.submitter_email)}</div>` : ""}
@@ -462,6 +462,17 @@ document.querySelectorAll("[data-tab-btn]").forEach((btn) => {
   });
 });
 
+document.querySelectorAll("[data-pending-sub]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("[data-pending-sub]").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    const sub = btn.dataset.pendingSub;
+    document.getElementById("pending-sub-patterns").hidden = sub !== "patterns";
+    document.getElementById("pending-sub-comments").hidden = sub !== "comments";
+    document.getElementById("pending-sub-links").hidden = sub !== "links";
+  });
+});
+
 document.querySelectorAll("[data-published-sub]").forEach((btn) => {
   btn.addEventListener("click", () => {
     document.querySelectorAll("[data-published-sub]").forEach((b) => b.classList.remove("active"));
@@ -515,7 +526,7 @@ function renderPublishedLinks(links) {
     const card = document.createElement("div");
     card.className = "card moderation-card";
     card.innerHTML = `
-      <h3>${escapeHtml(link.display_name)} — ${escapeHtml(link.network)}</h3>
+      <h3>${escapeHtml(link.display_name)} - ${escapeHtml(link.network)}</h3>
       <p><a href="${link.url}" target="_blank" rel="noopener">${escapeHtml(link.url)}</a></p>
       ${link.description ? `<p>${escapeHtml(link.description)}</p>` : ""}
       <div class="edit-panel" hidden style="margin-top:10px;">
