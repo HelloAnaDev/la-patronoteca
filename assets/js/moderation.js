@@ -440,6 +440,17 @@ document.querySelectorAll("[data-tab-btn]").forEach((btn) => {
   });
 });
 
+document.querySelectorAll("[data-published-sub]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("[data-published-sub]").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    const sub = btn.dataset.publishedSub;
+    document.getElementById("published-sub-patterns").hidden = sub !== "patterns";
+    document.getElementById("published-sub-comments").hidden = sub !== "comments";
+    document.getElementById("published-sub-links").hidden = sub !== "links";
+  });
+});
+
 async function loadPublished() {
   const [{ data: patterns }, { data: tags }, { data: links }, { data: comments }] = await Promise.all([
     supabaseClient

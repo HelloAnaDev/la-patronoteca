@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Moderación — La Patronoteca</title>
+<link rel="icon" href="assets/img/favicon.png" type="image/png">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,28 +62,40 @@
       </div>
 
       <div id="tab-published" hidden>
-        <h2>Buscar en patrones publicados</h2>
-        <div class="search-panel" aria-label="Buscador de patrones publicados">
-          <div class="search-row">
-            <input type="search" id="published-search-input" placeholder="Buscar por palabras...">
-          </div>
-          <div class="filter-group">
-            <span class="label">Técnica</span>
-            <div class="filter-options" id="published-filters-tecnica"></div>
-          </div>
-          <div class="filter-group">
-            <span class="label">Producto</span>
-            <div class="filter-options" id="published-filters-producto"></div>
-          </div>
+        <div class="filter-options" style="margin-bottom:16px;">
+          <button type="button" class="chip-toggle active" data-published-sub="patterns">Patrones</button>
+          <button type="button" class="chip-toggle" data-published-sub="comments">Comentarios</button>
+          <button type="button" class="chip-toggle" data-published-sub="links">Redes</button>
         </div>
-        <div id="published-count" class="meta" style="margin-top:16px; color:var(--color-text-soft);"></div>
-        <div id="published-list"></div>
 
-        <h2 style="margin-top:32px;">Redes sociales publicadas</h2>
-        <div id="published-links-list"></div>
+        <div id="published-sub-patterns">
+          <h2>Buscar en patrones publicados</h2>
+          <div class="search-panel" aria-label="Buscador de patrones publicados">
+            <div class="search-row">
+              <input type="search" id="published-search-input" placeholder="Buscar por palabras...">
+            </div>
+            <div class="filter-group">
+              <span class="label">Técnica</span>
+              <div class="filter-options" id="published-filters-tecnica"></div>
+            </div>
+            <div class="filter-group">
+              <span class="label">Producto</span>
+              <div class="filter-options" id="published-filters-producto"></div>
+            </div>
+          </div>
+          <div id="published-count" class="meta" style="margin-top:16px; color:var(--color-text-soft);"></div>
+          <div id="published-list"></div>
+        </div>
 
-        <h2 style="margin-top:32px;">Comentarios publicados</h2>
-        <div id="published-comments-list"></div>
+        <div id="published-sub-comments" hidden>
+          <h2>Comentarios publicados</h2>
+          <div id="published-comments-list"></div>
+        </div>
+
+        <div id="published-sub-links" hidden>
+          <h2>Redes sociales publicadas</h2>
+          <div id="published-links-list"></div>
+        </div>
       </div>
     </div>
 
@@ -113,6 +126,7 @@
 <script src="assets/js/config.js"></script>
 <script src="assets/js/demoData.js"></script>
 <script src="assets/js/supabaseClient.js"></script>
+<script src="assets/js/accountNav.js"></script>
 <script src="assets/js/moderation.js"></script>
 </body>
 </html>

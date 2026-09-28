@@ -138,6 +138,7 @@ function renderResults() {
         ${pattern.good_experience_count ? `<span title="Buena experiencia">😊 ${pattern.good_experience_count}</span>` : ""}
         ${pattern.bad_experience_count ? `<span title="No tan buena experiencia">😞 ${pattern.bad_experience_count}</span>` : ""}
         ${pattern.comments_count ? `<span title="Comentarios">${commentIconSmall()} ${pattern.comments_count}</span>` : ""}
+        <button type="button" class="card-stats-help" data-legend-trigger>¿Qué significa?</button>
       </div>
     `;
 
@@ -187,6 +188,38 @@ if (sortSelect) {
     renderResults();
   });
 }
+
+// ---------- Leyenda de los símbolos de las tarjetas ----------
+
+const statsLegendOverlay = document.createElement("div");
+statsLegendOverlay.className = "modal-overlay";
+statsLegendOverlay.hidden = true;
+statsLegendOverlay.innerHTML = `
+  <div class="modal-box">
+    <button type="button" class="modal-close" aria-label="Cerrar">×</button>
+    <h3 style="margin-top:0;">Qué significa cada símbolo</h3>
+    <ul style="padding-left:18px; display:grid; gap:10px;">
+      <li>${heartIconSmall()} <strong>Corazón:</strong> cuántas personas tienen este patrón guardado en favoritos.</li>
+      <li>😊 <strong>Cara sonriente:</strong> cuántas personas dicen que les fue bien haciendo este patrón.</li>
+      <li>😞 <strong>Cara triste:</strong> cuántas personas dicen que no les fue tan bien.</li>
+      <li>${commentIconSmall()} <strong>Bocadillo de texto:</strong> cuántos comentarios tiene el patrón.</li>
+    </ul>
+  </div>
+`;
+document.body.appendChild(statsLegendOverlay);
+statsLegendOverlay.querySelector(".modal-close").addEventListener("click", () => {
+  statsLegendOverlay.hidden = true;
+});
+statsLegendOverlay.addEventListener("click", (e) => {
+  if (e.target === statsLegendOverlay) statsLegendOverlay.hidden = true;
+});
+document.getElementById("pattern-grid").addEventListener("click", (e) => {
+  if (e.target.closest("[data-legend-trigger]")) {
+    e.preventDefault();
+    e.stopPropagation();
+    statsLegendOverlay.hidden = false;
+  }
+});
 
 loadTags();
 loadPatterns();

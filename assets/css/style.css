@@ -176,6 +176,17 @@ h2 { font-size: 1.4rem; }
   color: var(--color-text-soft);
 }
 .card-stats span { display: inline-flex; align-items: center; gap: 4px; }
+.card-stats-help {
+  margin-left: auto;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.76rem;
+  color: var(--color-text-soft);
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: inherit;
+}
 
 .tag-chip {
   display: inline-block;
@@ -234,7 +245,7 @@ form.stack { display: grid; gap: 18px; max-width: 640px; }
 .field { display: grid; gap: 6px; }
 .field label { font-weight: 700; }
 .field .hint { font-size: 0.85rem; color: var(--color-text-soft); }
-input[type="text"], input[type="email"], input[type="url"], textarea, select {
+input[type="text"], input[type="email"], input[type="url"], input[type="password"], input[type="search"], input[type="number"], textarea, select {
   padding: 10px 12px;
   border: 1.5px solid var(--color-border);
   border-radius: 8px;
@@ -421,6 +432,15 @@ details.filter-group .filter-options { margin-top: 8px; }
   padding: 0;
 }
 .tag-chip-editable button:hover { background: rgba(58, 46, 40, 0.3); }
+
+.kofi-info-arrow {
+  display: inline-block;
+  animation: kofi-arrow-bounce 1.4s ease-in-out infinite;
+}
+@keyframes kofi-arrow-bounce {
+  0%, 100% { transform: translateY(calc(-50% + 2px)); }
+  50% { transform: translateY(calc(-50% + 5px)); }
+}
 
 .modal-overlay {
   position: fixed;
