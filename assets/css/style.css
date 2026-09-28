@@ -528,8 +528,8 @@ details.filter-group .filter-options { margin-top: 8px; }
 }
 @media (max-width: 640px) {
   .kofi-info-btn {
-    padding: 4px 7px;
-    font-size: 0.41rem;
+    padding: 3px 5px;
+    font-size: 0.27rem;
   }
 }
 
