@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, handleOptions, jsonResponse } from "../_shared/cors.ts";
-import { sendEmail } from "../_shared/email.ts";
+import { sendEmailBackground } from "../_shared/email.ts";
 import { scanUrlWithVirusTotal } from "../_shared/virustotal.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -124,7 +124,7 @@ Deno.serve(async (req) => {
           })
           .eq("id", patternId);
 
-        await sendEmail({
+        sendEmailBackground({
           to: pattern.author_email,
           subject: "¡Tu patrón ya está publicado en La Patronoteca!",
           html: `
@@ -147,7 +147,7 @@ Deno.serve(async (req) => {
           .update({ status: "rejected", rejected_reason: reason ?? null, moderated_at: new Date().toISOString() })
           .eq("id", patternId);
 
-        await sendEmail({
+        sendEmailBackground({
           to: pattern.author_email,
           subject: "Sobre el patrón que enviaste a La Patronoteca",
           html: `

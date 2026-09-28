@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, handleOptions, jsonResponse } from "../_shared/cors.ts";
-import { sendEmail } from "../_shared/email.ts";
+import { sendEmailBackground } from "../_shared/email.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     });
     if (error) throw error;
 
-    await sendEmail({
+    sendEmailBackground({
       to: moderatorEmail,
       subject: `Aviso sobre un patrón marcado como posible IA: "${pattern?.short_description ?? ""}"`,
       html: `

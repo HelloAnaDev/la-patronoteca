@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, handleOptions, jsonResponse } from "../_shared/cors.ts";
-import { sendEmail } from "../_shared/email.ts";
+import { sendEmailBackground } from "../_shared/email.ts";
 import { detectAiSignature } from "../_shared/aiMetadata.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -135,7 +135,7 @@ Deno.serve(async (req) => {
       if (tagLinkError) throw tagLinkError;
     }
 
-    await sendEmail({
+    sendEmailBackground({
       to: moderatorEmail,
       subject: `Nuevo patrón para moderar: "${body.shortDescription}"`,
       html: `

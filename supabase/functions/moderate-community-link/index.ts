@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, handleOptions, jsonResponse } from "../_shared/cors.ts";
-import { sendEmail } from "../_shared/email.ts";
+import { sendEmailBackground } from "../_shared/email.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
     if (action === "accept") {
       await admin.from("community_links").update({ status: "approved", moderated_at: new Date().toISOString() }).eq("id", linkId);
       if (link.submitter_email) {
-        await sendEmail({
+        sendEmailBackground({
           to: link.submitter_email,
           subject: "¡Tu red social ya aparece en La Patronoteca!",
           html: `
@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
     if (action === "reject") {
       await admin.from("community_links").update({ status: "rejected", moderated_at: new Date().toISOString() }).eq("id", linkId);
       if (link.submitter_email) {
-        await sendEmail({
+        sendEmailBackground({
           to: link.submitter_email,
           subject: "Sobre tu enlace enviado a La Patronoteca",
           html: `

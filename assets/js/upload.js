@@ -223,8 +223,15 @@ renderGalleryWidget();
 
 // ---------- Envío del formulario ----------
 
+// Además de desactivar el botón, guardamos si ya hay un envío en marcha:
+// así, aunque el "submit" se dispare más de una vez seguida (doble clic,
+// tecla Enter repetida...), solo se procesa una vez.
+let isSubmitting = false;
+
 document.getElementById("upload-form").addEventListener("submit", async (e) => {
   e.preventDefault();
+  if (isSubmitting) return;
+  isSubmitting = true;
   const submitBtn = document.getElementById("submit-btn");
   submitBtn.disabled = true;
   showMessage("Subiendo tu patrón, un momento...", "info");
@@ -293,6 +300,7 @@ document.getElementById("upload-form").addEventListener("submit", async (e) => {
     showMessage("Ha ocurrido un error al enviar tu patrón: " + err.message, "danger");
   } finally {
     submitBtn.disabled = false;
+    isSubmitting = false;
   }
 });
 

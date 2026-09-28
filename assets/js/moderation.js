@@ -13,6 +13,35 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+// ---------- Ver fotos en grande (lightbox) ----------
+
+const adminLightboxOverlay = document.createElement("div");
+adminLightboxOverlay.className = "modal-overlay";
+adminLightboxOverlay.hidden = true;
+adminLightboxOverlay.innerHTML = `
+  <div class="modal-box" style="max-width:90vw; max-height:90vh; padding:16px; display:flex;">
+    <button type="button" class="modal-close" aria-label="Cerrar">×</button>
+    <img id="admin-lightbox-img" style="max-width:100%; max-height:80vh; margin:auto; display:block; border-radius:8px;">
+  </div>
+`;
+document.body.appendChild(adminLightboxOverlay);
+adminLightboxOverlay.querySelector(".modal-close").addEventListener("click", () => {
+  adminLightboxOverlay.hidden = true;
+});
+adminLightboxOverlay.addEventListener("click", (e) => {
+  if (e.target === adminLightboxOverlay) adminLightboxOverlay.hidden = true;
+});
+
+function openAdminLightbox(url) {
+  document.getElementById("admin-lightbox-img").src = url;
+  adminLightboxOverlay.hidden = false;
+}
+
+function makeImageZoomable(img) {
+  img.style.cursor = "zoom-in";
+  img.addEventListener("click", () => openAdminLightbox(img.src));
+}
+
 async function checkSession() {
   const { data } = await supabaseClient.auth.getSession();
   const session = data.session;
@@ -243,6 +272,7 @@ async function loadImagePreviews(card, pattern) {
       img.style.height = "90px";
       img.style.objectFit = "cover";
       img.style.borderRadius = "8px";
+      makeImageZoomable(img);
       container.appendChild(img);
     } catch (err) {
       console.error("No se pudo cargar preview de imagen", err);
@@ -413,6 +443,7 @@ function renderComments() {
         try {
           const { url } = await callFunction("moderate-comment", { action: "preview_url", commentId: comment.id }, true);
           card.querySelector(".comment-image-preview").innerHTML = `<img src="${url}" style="max-width:220px; border-radius:8px; margin-top:8px;">`;
+          makeImageZoomable(card.querySelector(".comment-image-preview img"));
         } catch (err) {
           alert("Error al ver la foto: " + err.message);
         }
@@ -628,6 +659,7 @@ function renderPublishedComments(comments) {
         try {
           const { url } = await callFunction("moderate-comment", { action: "preview_published_url", commentId: comment.id }, true);
           card.querySelector(".comment-image-preview").innerHTML = `<img src="${url}" style="max-width:220px; border-radius:8px; margin-top:8px;">`;
+          makeImageZoomable(card.querySelector(".comment-image-preview img"));
         } catch (err) {
           alert("Error al ver la foto: " + err.message);
         }
@@ -712,7 +744,7 @@ function renderPublishedResults() {
 
     card.innerHTML = `
       <div style="display:flex; gap:14px;">
-        <img src="${coverUrl}" alt="" style="width:80px; height:80px; object-fit:cover; border-radius:8px; flex-shrink:0;">
+        <img class="published-cover-thumb" src="${coverUrl}" alt="" style="width:80px; height:80px; object-fit:cover; border-radius:8px; flex-shrink:0;">
         <div style="flex:1;">
           <h3 style="margin:0 0 4px;">${escapeHtml(pattern.short_description)}</h3>
           <div class="meta">Por ${escapeHtml(pattern.author_name)}</div>
@@ -739,6 +771,8 @@ function renderPublishedResults() {
         <button class="btn btn-danger" data-action="delete">Borrar</button>
       </div>
     `;
+
+    makeImageZoomable(card.querySelector(".published-cover-thumb"));
 
     const editPanel = card.querySelector(".edit-panel");
     const linkedIds = new Set(pattern.tags.map((t) => t.id));

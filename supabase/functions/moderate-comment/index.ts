@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders, handleOptions, jsonResponse } from "../_shared/cors.ts";
-import { sendEmail } from "../_shared/email.ts";
+import { sendEmailBackground } from "../_shared/email.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       if (pattern?.notify_on_comment && pattern.author_email) {
-        await sendEmail({
+        sendEmailBackground({
           to: pattern.author_email,
           subject: `Nuevo comentario en tu patrón "${pattern.short_description}"`,
           html: `

@@ -62,3 +62,18 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
     await client.close();
   }
 }
+
+// Igual que sendEmail, pero sin esperar a que el correo termine de enviarse
+// antes de devolver la respuesta. Gmail a veces tarda o se satura, y quien
+// está subiendo un patrón o escribiendo un comentario no tiene por qué
+// esperar a eso: la acción principal ya está guardada, el email es solo un
+// aviso. EdgeRuntime.waitUntil mantiene la función viva lo justo para que el
+// envío termine en segundo plano.
+export function sendEmailBackground(opts: { to: string; subject: string; html: string }) {
+  const promise = sendEmail(opts);
+  // deno-lint-ignore no-explicit-any
+  const runtime = (globalThis as any).EdgeRuntime;
+  if (runtime?.waitUntil) {
+    runtime.waitUntil(promise);
+  }
+}
