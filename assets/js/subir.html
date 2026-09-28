@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subir un patrón - La Patronoteca</title>
+<link rel="icon" href="assets/img/favicon.png" type="image/png">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="assets/img/logo.webp" alt="" width="32" height="32">La Patronoteca</a>
+    <nav class="main-nav">
+      <a href="index.html">Inicio</a>
+      <a href="subir.html" class="active">Subir un patrón</a>
+      <a href="comunidad.html">Comunidad</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <h1>Comparte tu patrón</h1>
+    <p class="lead">No hace falta registrarse. Tu patrón se revisará antes de publicarse: analizamos el archivo por seguridad y comprobamos que el contenido sea adecuado para la comunidad.</p>
+
+    <form id="upload-form" class="stack">
+      <div class="field">
+        <label for="author-name">Tu nombre o apodo</label>
+        <input type="text" id="author-name" required>
+      </div>
+
+      <div class="field">
+        <label for="author-email">Tu email</label>
+        <input type="email" id="author-email" required>
+        <span class="hint">No lo mostramos nunca en la web ni lo usamos para enviarte publicidad - de hecho, La Patronoteca no gestiona publicidad de ningún tipo, así que tu email nunca se usará con ese fin. Solo sirve para avisarte de si tu patrón se ha aceptado, y como medida de seguridad frente a envíos abusivos.</span>
+        <label style="display:flex; align-items:flex-start; gap:8px; font-weight:400; margin-top:6px;">
+          <input type="checkbox" id="notify-on-comment" style="margin-top:3px;">
+          <span>Quiero que si alguien escribe un comentario en mi publicación se me notifique por email</span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="short-description">Descripción breve</label>
+        <input type="text" id="short-description" maxlength="120" required placeholder="Ej. Chaqueta cruzada de punto para bebé">
+      </div>
+
+      <div class="field">
+        <label for="long-description">Descripción larga (opcional)</label>
+        <textarea id="long-description" placeholder="Materiales, tallas, dificultad, notas..."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="original-source">Fuente original (opcional)</label>
+        <input type="text" id="original-source" placeholder="Enlace o nombre de quien lo creó">
+        <span class="hint" style="font-size:0.78rem;">Si sabes de dónde sale este patrón, indícalo aquí (el enlace o el nombre de quien lo creó) para darle crédito.</span>
+      </div>
+
+      <div class="field">
+        <label for="pattern-files">Patrón</label>
+        <input type="file" id="pattern-files" accept="application/pdf,image/*" multiple required>
+        <span class="hint">Puede ser uno o varios archivos: PDF, fotos de las hojas del patrón, o ambos.</span>
+      </div>
+
+      <div class="field">
+        <label for="cover-file">Foto de portada (opcional, recomendado)</label>
+        <input type="file" id="cover-file" accept="image/*">
+        <span class="hint" style="font-size:0.78rem;">Ten en cuenta que una persona que quiera descargar un patrón querrá ver cómo queda el producto antes de invertir material y tiempo en hacerlo. Te recomendamos usar una foto del producto final para la portada.</span>
+      </div>
+
+      <div class="field">
+        <label>Galería de fotos (opcional)</label>
+        <span class="hint">Mantén pulsada una foto y arrástrala para cambiar su orden, o escribe el número debajo de cada una.</span>
+        <div id="gallery-widget" class="gallery-widget"></div>
+        <input type="file" id="gallery-file-input" accept="image/*" multiple hidden>
+      </div>
+
+      <div class="field">
+        <label>Técnica</label>
+        <div class="filter-options" id="tecnica-options"></div>
+        <span class="hint">¿No encuentras tu técnica? Escríbela y pulsa coma o Enter para añadirla (máximo 1). La revisaremos antes de que aparezca para todos.</span>
+        <div id="new-technique-chips" class="tag-chip-input"></div>
+        <input type="text" id="new-technique-input" placeholder="Ej. Sashiko">
+      </div>
+
+      <div class="field">
+        <label>Producto</label>
+        <div class="filter-options" id="producto-options"></div>
+        <span class="hint">¿No encuentras la categoría de tu patrón? Escribe qué etiquetas pondrías y pulsa coma o Enter tras cada una para añadirla (verás un recuadro con una X para borrarla si te equivocas). Por ejemplo, si es una camisa de mujer, escribe camisa, pulsa coma, escribe mujer, pulsa coma. Usa palabras generales, fáciles y descriptivas. Máximo 3 etiquetas.</span>
+        <div id="new-product-chips" class="tag-chip-input"></div>
+        <input type="text" id="new-tag-input" placeholder="Ej. camisa">
+      </div>
+
+      <div id="form-message"></div>
+
+      <button type="submit" class="btn btn-primary" id="submit-btn">Enviar a revisión</button>
+    </form>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>La Patronoteca - <a href="aviso-legal.html">Aviso legal</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos de la comunidad</a></p>
+    <p><a href="moderacion.html">Acceso Administración</a></p>
+  </div>
+  <div class="credit-band">
+    <a href="https://linktr.ee/hello.ana.dev" target="_blank" rel="noopener">Sitio web desarrollado por Hello.Ana.Dev</a>
+  </div>
+</footer>
+
+<script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+<script>
+  kofiWidgetOverlay.draw('helloanadev', {
+    'type': 'floating-chat',
+    'floating-chat.donateButton.text': 'Apóyame',
+    'floating-chat.donateButton.background-color': '#ff5f5f',
+    'floating-chat.donateButton.text-color': '#fff'
+  });
+</script>
+<script src="assets/js/kofiInfo.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/demoData.js"></script>
+<script src="assets/js/supabaseClient.js"></script>
+<script src="assets/js/adminNav.js"></script>
+<script src="assets/js/accountNav.js"></script>
+<script src="assets/js/upload.js"></script>
+</body>
+</html>

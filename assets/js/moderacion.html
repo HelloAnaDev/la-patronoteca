@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moderación - La Patronoteca</title>
+<link rel="icon" href="assets/img/favicon.png" type="image/png">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="assets/img/logo.webp" alt="" width="32" height="32">La Patronoteca</a>
+    <nav class="main-nav">
+      <a href="index.html">Inicio</a>
+      <a href="subir.html">Subir un patrón</a>
+      <a href="comunidad.html">Comunidad</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <div id="login-section" class="card login-box" style="padding:28px;">
+      <h1 style="font-size:1.3rem;">Acceso Administración</h1>
+      <p class="hint">Escribe tu email. Si tiene acceso, te mandamos un enlace para entrar (sin contraseña). El enlace caduca en 1 hora, y la sesión dura 1 semana.</p>
+      <form id="login-form" class="stack">
+        <div class="field">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" required>
+        </div>
+        <div id="login-message"></div>
+        <button type="submit" class="btn btn-primary">Enviar enlace de acceso</button>
+      </form>
+    </div>
+
+    <div id="dashboard-section" hidden>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <h1>Panel de moderación</h1>
+        <button id="logout-btn" class="btn btn-outline">Cerrar sesión</button>
+      </div>
+
+      <div class="filter-options" style="margin:16px 0;">
+        <button type="button" class="chip-toggle active" data-tab-btn="pending">Pendientes</button>
+        <button type="button" class="chip-toggle" data-tab-btn="published">Publicados</button>
+      </div>
+
+      <div id="tab-pending">
+        <div class="filter-options" style="margin-bottom:16px;">
+          <button type="button" class="chip-toggle active" data-pending-sub="patterns">Patrones</button>
+          <button type="button" class="chip-toggle" data-pending-sub="comments">Comentarios</button>
+          <button type="button" class="chip-toggle" data-pending-sub="links">Redes</button>
+        </div>
+
+        <div id="pending-sub-patterns">
+          <h2>Patrones pendientes (<span id="patterns-count">0</span>)</h2>
+          <div id="patterns-list"></div>
+        </div>
+
+        <div id="pending-sub-comments" hidden>
+          <h2>Comentarios pendientes (<span id="comments-count">0</span>)</h2>
+          <div id="comments-list-moderation"></div>
+        </div>
+
+        <div id="pending-sub-links" hidden>
+          <h2>Redes sociales pendientes (<span id="links-count">0</span>)</h2>
+          <div id="links-list"></div>
+        </div>
+      </div>
+
+      <div id="tab-published" hidden>
+        <div class="filter-options" style="margin-bottom:16px;">
+          <button type="button" class="chip-toggle active" data-published-sub="patterns">Patrones</button>
+          <button type="button" class="chip-toggle" data-published-sub="comments">Comentarios</button>
+          <button type="button" class="chip-toggle" data-published-sub="links">Redes</button>
+        </div>
+
+        <div id="published-sub-patterns">
+          <h2>Buscar en patrones publicados</h2>
+          <div class="search-panel" aria-label="Buscador de patrones publicados">
+            <div class="search-row">
+              <input type="search" id="published-search-input" placeholder="Buscar por palabras...">
+            </div>
+            <div class="filter-group">
+              <span class="label">Técnica</span>
+              <div class="filter-options" id="published-filters-tecnica"></div>
+            </div>
+            <div class="filter-group">
+              <span class="label">Producto</span>
+              <div class="filter-options" id="published-filters-producto"></div>
+            </div>
+          </div>
+          <div id="published-count" class="meta" style="margin-top:16px; color:var(--color-text-soft);"></div>
+          <div id="published-list"></div>
+        </div>
+
+        <div id="published-sub-comments" hidden>
+          <h2>Comentarios publicados</h2>
+          <div id="published-comments-list"></div>
+        </div>
+
+        <div id="published-sub-links" hidden>
+          <h2>Redes sociales publicadas</h2>
+          <div id="published-links-list"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>La Patronoteca - <a href="aviso-legal.html">Aviso legal</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos de la comunidad</a></p>
+  </div>
+  <div class="credit-band">
+    <a href="https://linktr.ee/hello.ana.dev" target="_blank" rel="noopener">Sitio web desarrollado por Hello.Ana.Dev</a>
+  </div>
+</footer>
+
+<script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+<script>
+  kofiWidgetOverlay.draw('helloanadev', {
+    'type': 'floating-chat',
+    'floating-chat.donateButton.text': 'Apóyame',
+    'floating-chat.donateButton.background-color': '#ff5f5f',
+    'floating-chat.donateButton.text-color': '#fff'
+  });
+</script>
+<script src="assets/js/kofiInfo.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/demoData.js"></script>
+<script src="assets/js/supabaseClient.js"></script>
+<script src="assets/js/adminNav.js"></script>
+<script src="assets/js/accountNav.js"></script>
+<script src="assets/js/moderation.js"></script>
+</body>
+</html>
