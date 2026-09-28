@@ -27,8 +27,9 @@ export async function scanUrlWithVirusTotal(url: string) {
   const submitJson = await submitRes.json();
   const analysisId: string = submitJson.data.id;
 
-  // VirusTotal tarda unos segundos en analizar. Reintentamos varias veces.
-  for (let i = 0; i < 8; i++) {
+  // VirusTotal a veces tarda bastante en analizar (sobre todo PDFs grandes).
+  // Reintentamos hasta ~75 segundos antes de rendirnos.
+  for (let i = 0; i < 25; i++) {
     await new Promise((r) => setTimeout(r, 3000));
     const checkRes = await fetch(`${VT_API}/analyses/${analysisId}`, {
       headers: { "x-apikey": apiKey },

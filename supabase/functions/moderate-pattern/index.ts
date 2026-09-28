@@ -60,20 +60,27 @@ Deno.serve(async (req) => {
       case "analyze": {
         await admin.from("patterns").update({ virustotal_status: "analyzing" }).eq("id", patternId);
 
-        const results = [];
-        for (const path of pattern.pattern_paths as string[]) {
-          const { data: signed } = await admin.storage.from("pending-uploads").createSignedUrl(path, 3600);
-          if (!signed) throw new Error("No se pudo generar el enlace de " + path);
-          const result = await scanUrlWithVirusTotal(signed.signedUrl);
-          results.push({ path, ...result });
-        }
+        // Analizamos todos los archivos a la vez (no uno detrás de otro),
+        // para que el tiempo total sea el del más lento, no la suma de todos.
+        const results = await Promise.all(
+          (pattern.pattern_paths as string[]).map(async (path) => {
+            const { data: signed } = await admin.storage.from("pending-uploads").createSignedUrl(path, 3600);
+            if (!signed) throw new Error("No se pudo generar el enlace de " + path);
+            const result = await scanUrlWithVirusTotal(signed.signedUrl);
+            return { path, ...result };
+          })
+        );
 
+        // Si algún archivo no terminó de analizarse a tiempo, no lo contamos
+        // como "sospechoso" (sería confuso y engañoso): lo dejamos en "sin
+        // analizar" para poder repetir el análisis.
+        const hasPending = results.some((r) => r.pending);
         const allClean = results.every((r) => r.isClean);
 
         await admin
           .from("patterns")
           .update({
-            virustotal_status: allClean ? "clean" : "flagged",
+            virustotal_status: hasPending ? "not_analyzed" : allClean ? "clean" : "flagged",
             virustotal_result: results,
           })
           .eq("id", patternId);

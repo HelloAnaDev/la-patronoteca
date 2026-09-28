@@ -235,7 +235,7 @@ function renderVirusTotalDetail(results) {
       ${results
         .map((r) => {
           if (r.pending || !r.stats) {
-            return `<div>${escapeHtml(r.path.split("/").pop())}: análisis aún pendiente.</div>`;
+            return `<div>${escapeHtml(r.path.split("/").pop())}: VirusTotal tardó demasiado en responder. Dale otra vez a "Analizar patrón" para volver a intentarlo.</div>`;
           }
           const malicious = r.stats.malicious ?? 0;
           const suspicious = r.stats.suspicious ?? 0;
