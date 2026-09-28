@@ -520,10 +520,6 @@ details.filter-group .filter-options { margin-top: 8px; }
   z-index: 1;
 }
 
-.floatingchat-container {
-  transform: scale(0.78);
-  transform-origin: bottom left;
-}
 
 table.simple { width: 100%; border-collapse: collapse; }
 table.simple th, table.simple td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--color-border); }

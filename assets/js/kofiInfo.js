@@ -51,4 +51,21 @@
   });
 
   document.body.appendChild(btn);
+
+  // El botón de Ko-fi es un iframe que su propio script reposiciona solo,
+  // así que una regla CSS normal (incluso con !important) no basta: el
+  // script de Ko-fi la deshace. Lo comprobamos y volvemos a encoger cada
+  // poco tiempo, solo en móvil.
+  function enforceKofiMobileScale() {
+    const iframe = document.querySelector(".floatingchat-container");
+    if (!iframe) return;
+    const isMobile = window.matchMedia("(max-width: 640px)").matches;
+    const desired = isMobile ? "scale(0.78)" : "";
+    if (iframe.style.transform !== desired) {
+      iframe.style.setProperty("transform", desired, desired ? "important" : "");
+      iframe.style.setProperty("transform-origin", "bottom left", desired ? "important" : "");
+    }
+  }
+  setInterval(enforceKofiMobileScale, 400);
+  window.addEventListener("resize", enforceKofiMobileScale);
 })();
