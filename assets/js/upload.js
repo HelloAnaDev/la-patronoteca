@@ -248,22 +248,20 @@ document.getElementById("upload-form").addEventListener("submit", async (e) => {
 
     const sessionId = crypto.randomUUID();
 
-    const patternPaths = [];
-    for (const file of patternFiles) {
-      const toUpload = file.type.startsWith("image/") ? await convertImageToWebp(file) : file;
-      patternPaths.push(await uploadToPending(toUpload, sessionId));
-    }
-
-    let coverPath = null;
-    if (coverFile) {
-      const webpCover = await convertImageToWebp(coverFile);
-      coverPath = await uploadToPending(webpCover, sessionId);
-    }
-
-    const galleryPaths = [];
-    for (const item of galleryItems) {
-      galleryPaths.push(await uploadToPending(item.file, sessionId));
-    }
+    // Subimos todos los archivos a la vez (en paralelo) en vez de uno a uno,
+    // para que el tiempo total sea el del archivo más lento, no la suma de todos.
+    const [patternPaths, coverPath, galleryPaths] = await Promise.all([
+      Promise.all(
+        patternFiles.map(async (file) => {
+          const toUpload = file.type.startsWith("image/") ? await convertImageToWebp(file) : file;
+          return uploadToPending(toUpload, sessionId);
+        })
+      ),
+      coverFile
+        ? convertImageToWebp(coverFile).then((webpCover) => uploadToPending(webpCover, sessionId))
+        : Promise.resolve(null),
+      Promise.all(galleryItems.map((item) => uploadToPending(item.file, sessionId))),
+    ]);
 
     await callFunction("submit-pattern", {
       authorName,

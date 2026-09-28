@@ -76,19 +76,23 @@ Deno.serve(async (req) => {
     }
 
     // Heurística de IA sobre la portada y la galería (solo aviso, nunca bloqueo).
+    // Se comprueban todas las imágenes a la vez en vez de una a una, para no
+    // sumar el tiempo de descarga de cada una.
     let aiDetected = false;
     let aiSignature: string | undefined;
     const imagePaths = [body.coverImagePath, ...(body.galleryPaths ?? []), ...body.patternPaths].filter(Boolean) as string[];
-    for (const path of imagePaths) {
-      const { data: fileData } = await admin.storage.from("pending-uploads").download(path);
-      if (!fileData) continue;
-      const bytes = new Uint8Array(await fileData.arrayBuffer());
-      const result = await detectAiSignature(bytes);
-      if (result.detected) {
-        aiDetected = true;
-        aiSignature = result.signature;
-        break;
-      }
+    const aiChecks = await Promise.all(
+      imagePaths.map(async (path) => {
+        const { data: fileData } = await admin.storage.from("pending-uploads").download(path);
+        if (!fileData) return null;
+        const bytes = new Uint8Array(await fileData.arrayBuffer());
+        return detectAiSignature(bytes);
+      })
+    );
+    const firstDetected = aiChecks.find((r) => r?.detected);
+    if (firstDetected) {
+      aiDetected = true;
+      aiSignature = firstDetected.signature;
     }
 
     // Etiquetas sugeridas libremente: hasta 3 de producto y 1 de técnica.

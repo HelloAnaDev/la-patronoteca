@@ -42,6 +42,10 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
     },
   });
 
+  // Un email es un efecto secundario, no la acción principal (guardar el
+  // patrón, aceptar un comentario, etc.). Si Gmail falla o está ocupado
+  // (esto pasa, es normal), avisamos por consola pero no rompemos la acción
+  // real que estaba haciendo la persona.
   try {
     await client.send({
       from: `La Patronoteca <${user}>`,
@@ -52,6 +56,8 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
         toBase64MimePart(opts.html, 'text/html; charset="utf-8"'),
       ],
     });
+  } catch (err) {
+    console.error("No se pudo enviar el email (no se interrumpe la acción principal):", opts.subject, err);
   } finally {
     await client.close();
   }
