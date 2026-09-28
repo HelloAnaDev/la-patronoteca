@@ -16,8 +16,8 @@
     color: #fff;
     border: none;
     border-radius: 999px;
-    padding: 4px 10px;
-    font-size: 0.68rem;
+    padding: 8px 14px;
+    font-size: 0.82rem;
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
