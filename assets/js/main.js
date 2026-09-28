@@ -134,10 +134,12 @@ function renderResults() {
         .map((t) => `<span class="tag-chip ${t.category === "tecnica" ? "tecnica" : ""}">${escapeHtml(t.display_name)}</span>`)
         .join("")}</div>
       <div class="card-stats">
-        <span title="Favoritos">${heartIconSmall()} ${pattern.hearts_count || 0}</span>
-        <span title="Buena experiencia">😊 ${pattern.good_experience_count || 0}</span>
-        <span title="No tan buena experiencia">😞 ${pattern.bad_experience_count || 0}</span>
-        <span title="Comentarios">${commentIconSmall()} ${pattern.comments_count || 0}</span>
+        <div class="card-stats-grid">
+          <span title="Favoritos">${heartIconSmall()}<strong>${pattern.hearts_count || 0}</strong></span>
+          <span title="Buena experiencia">😊<strong>${pattern.good_experience_count || 0}</strong></span>
+          <span title="No tan buena experiencia">😞<strong>${pattern.bad_experience_count || 0}</strong></span>
+          <span title="Comentarios">${commentIconSmall()}<strong>${pattern.comments_count || 0}</strong></span>
+        </div>
         <button type="button" class="card-stats-help" data-legend-trigger>¿Qué significa?</button>
       </div>
     `;

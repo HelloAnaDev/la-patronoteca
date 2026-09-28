@@ -10,14 +10,14 @@
   btn.style.cssText = `
     position: fixed;
     left: 20px;
-    bottom: 88px;
+    bottom: 66px;
     z-index: 99;
     background: #ff5f5f;
     color: #fff;
     border: none;
     border-radius: 999px;
-    padding: 8px 14px;
-    font-size: 0.82rem;
+    padding: 4px 10px;
+    font-size: 0.68rem;
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);

@@ -53,7 +53,9 @@ async function loadPattern() {
 
   const { data: pattern, error } = await supabaseClient
     .from("patterns")
-    .select("*, pattern_tags(tags(id, category, display_name))")
+    .select(
+      "id, created_at, moderated_at, author_name, short_description, long_description, original_source, pattern_paths, cover_image_path, gallery_paths, ai_disclosed, hearts_count, good_experience_count, bad_experience_count, comments_count, status, pattern_tags(tags(id, category, display_name))"
+    )
     .eq("id", id)
     .eq("status", "approved")
     .maybeSingle();
@@ -288,7 +290,7 @@ async function loadComments(patternId) {
   const list = document.getElementById("comments-list");
   const { data, error } = await supabaseClient
     .from("comments")
-    .select("*")
+    .select("id, created_at, pattern_id, alias, message, image_path, status")
     .eq("pattern_id", patternId)
     .eq("status", "approved")
     .order("created_at", { ascending: false });

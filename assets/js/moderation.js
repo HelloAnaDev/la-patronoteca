@@ -19,9 +19,9 @@ const adminLightboxOverlay = document.createElement("div");
 adminLightboxOverlay.className = "modal-overlay";
 adminLightboxOverlay.hidden = true;
 adminLightboxOverlay.innerHTML = `
-  <div class="modal-box" style="max-width:90vw; max-height:90vh; padding:16px; display:flex;">
+  <div class="modal-box" style="max-width:90vw; padding:16px; text-align:center;">
     <button type="button" class="modal-close" aria-label="Cerrar">×</button>
-    <img id="admin-lightbox-img" style="max-width:100%; max-height:80vh; margin:auto; display:block; border-radius:8px;">
+    <img id="admin-lightbox-img" style="max-width:100%; max-height:75vh; display:block; margin:0 auto; border-radius:8px;">
   </div>
 `;
 document.body.appendChild(adminLightboxOverlay);
@@ -381,7 +381,7 @@ function renderCommunityLinks() {
     card.className = "card moderation-card";
     card.innerHTML = `
       <div class="meta">Enviado el ${new Date(link.created_at).toLocaleString("es-ES")}</div>
-      <h3>${escapeHtml(link.display_name)} - ${escapeHtml(link.network)}</h3>
+      <h3>${escapeHtml(link.display_name)} - ${NETWORK_LABELS[link.network] || escapeHtml(link.network)}</h3>
       <p><a href="${link.url}" target="_blank" rel="noopener">${escapeHtml(link.url)}</a></p>
       ${link.description ? `<p>${escapeHtml(link.description)}</p>` : ""}
       ${link.submitter_email ? `<div class="meta">Email: ${escapeHtml(link.submitter_email)}</div>` : ""}
@@ -523,10 +523,14 @@ async function loadPublished() {
       .eq("status", "approved")
       .order("created_at", { ascending: false }),
     supabaseClient.from("tags").select("id, category, display_name").eq("status", "approved").order("display_name"),
-    supabaseClient.from("community_links").select("*").eq("status", "approved").order("created_at", { ascending: false }),
+    supabaseClient
+      .from("community_links")
+      .select("id, created_at, moderated_at, display_name, network, url, description, status")
+      .eq("status", "approved")
+      .order("created_at", { ascending: false }),
     supabaseClient
       .from("comments")
-      .select("*, patterns(short_description)")
+      .select("id, created_at, moderated_at, pattern_id, alias, message, image_path, status, patterns(short_description)")
       .eq("status", "approved")
       .order("created_at", { ascending: false }),
   ]);
@@ -542,7 +546,16 @@ async function loadPublished() {
   renderPublishedComments(comments || []);
 }
 
-const NETWORK_OPTIONS = ["instagram", "tiktok", "youtube", "facebook", "pinterest", "etsy", "otra"];
+const NETWORK_LABELS = {
+  instagram: "Instagram",
+  tiktok: "TikTok",
+  youtube: "YouTube",
+  facebook: "Facebook",
+  pinterest: "Pinterest",
+  etsy: "Etsy",
+  otra: "Otra",
+};
+const NETWORK_OPTIONS = Object.keys(NETWORK_LABELS);
 
 function renderPublishedLinks(links) {
   const list = document.getElementById("published-links-list");
@@ -557,7 +570,7 @@ function renderPublishedLinks(links) {
     const card = document.createElement("div");
     card.className = "card moderation-card";
     card.innerHTML = `
-      <h3>${escapeHtml(link.display_name)} - ${escapeHtml(link.network)}</h3>
+      <h3>${escapeHtml(link.display_name)} - ${NETWORK_LABELS[link.network] || escapeHtml(link.network)}</h3>
       <p><a href="${link.url}" target="_blank" rel="noopener">${escapeHtml(link.url)}</a></p>
       ${link.description ? `<p>${escapeHtml(link.description)}</p>` : ""}
       <div class="edit-panel" hidden style="margin-top:10px;">
@@ -568,7 +581,7 @@ function renderPublishedLinks(links) {
         <div class="field">
           <label>Red</label>
           <select class="edit-network">
-            ${NETWORK_OPTIONS.map((n) => `<option value="${n}" ${n === link.network ? "selected" : ""}>${n}</option>`).join("")}
+            ${NETWORK_OPTIONS.map((n) => `<option value="${n}" ${n === link.network ? "selected" : ""}>${NETWORK_LABELS[n]}</option>`).join("")}
           </select>
         </div>
         <div class="field">
