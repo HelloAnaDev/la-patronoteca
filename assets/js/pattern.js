@@ -120,7 +120,6 @@ async function loadPattern() {
 
         <div class="actions no-print" style="margin:14px 0;">
           <button class="btn btn-outline" id="heart-btn" aria-label="Guardar y marcar como favorito">${heartIconSvg(false)} <span id="heart-label">Guardar</span> (<span id="hearts-count">${pattern.hearts_count || 0}</span>)</button>
-          <button class="btn btn-outline" id="print-btn">Imprimir</button>
         </div>
 
         <div class="no-print" style="margin-bottom:18px;">
@@ -132,7 +131,7 @@ async function loadPattern() {
           <div id="copy-link-result"></div>
         </div>
 
-        <h3 style="margin-top:20px;">El patrón</h3>
+        <h3 style="margin-top:20px;">Aquí debajo tienes los archivos del patrón</h3>
         <div style="display:flex; flex-wrap:wrap;">${patternFilesHtml}</div>
 
         ${pattern.ai_disclosed ? renderAiDisclosure(pattern.id) : ""}
@@ -210,8 +209,6 @@ async function loadPattern() {
       resultEl.innerHTML = `<div class="notice info" style="margin-top:6px;">Copia este enlace: ${pageUrl}</div>`;
     }
   });
-
-  document.getElementById("print-btn").addEventListener("click", () => window.print());
 
   // ---------- Ver fotos en grande, de una en una ----------
   lightboxImages = [coverUrl, ...(pattern.gallery_paths || []).map(publicFileUrl)];

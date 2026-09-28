@@ -18,7 +18,7 @@
       <button type="button" class="modal-close" aria-label="Cerrar">×</button>
       <div id="account-logged-out">
         <h3 style="margin-top:0;">Mi cuenta</h3>
-        <p class="hint">Con una cuenta puedes guardar patrones en tus favoritos y verlos desde cualquier dispositivo. No compartimos tu email con nadie.</p>
+        <p class="hint">Con una cuenta puedes guardar patrones en tus favoritos y verlos cuando quieras, aunque si solo quieres imprimir los pdf puedes hacerlo sin registrarte.<br>No mandamos publicidad.</p>
         <form id="account-form" class="stack">
           <div class="field">
             <label for="account-email">Email</label>
