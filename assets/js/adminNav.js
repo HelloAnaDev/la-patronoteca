@@ -12,6 +12,9 @@
         link.href = "moderacion.html";
         link.textContent = "Administración";
         link.dataset.adminLink = "1";
+        if (window.location.pathname.endsWith("moderacion.html")) {
+          link.classList.add("active");
+        }
         nav.appendChild(link);
       }
     }

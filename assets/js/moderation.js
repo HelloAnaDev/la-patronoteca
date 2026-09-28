@@ -137,6 +137,7 @@ function renderPatterns() {
         <span class="badge ${badgeClass(pattern.virustotal_status)}">VirusTotal: ${vtLabel(pattern.virustotal_status)}</span>
         · <span class="meta" style="display:inline;">${pattern.pattern_paths.length} archivo${pattern.pattern_paths.length === 1 ? "" : "s"} en el patrón</span>
       </div>
+      ${renderVirusTotalDetail(pattern.virustotal_result)}
       <div class="actions">
         <button class="btn btn-secondary" data-action="analyze">Analizar patrón</button>
       </div>
@@ -196,6 +197,27 @@ function badgeClass(status) {
 }
 function vtLabel(status) {
   return { not_analyzed: "sin analizar", analyzing: "analizando...", clean: "limpio", flagged: "sospechoso" }[status] || status;
+}
+
+function renderVirusTotalDetail(results) {
+  if (!results || !results.length) return "";
+  return `
+    <div class="meta" style="margin-top:6px; display:grid; gap:4px;">
+      ${results
+        .map((r) => {
+          if (r.pending || !r.stats) {
+            return `<div>${escapeHtml(r.path.split("/").pop())}: análisis aún pendiente.</div>`;
+          }
+          const malicious = r.stats.malicious ?? 0;
+          const suspicious = r.stats.suspicious ?? 0;
+          const total = Object.values(r.stats).reduce((a, b) => a + b, 0);
+          const detectados = malicious + suspicious;
+          const link = `https://www.virustotal.com/gui/url-analysis/${r.analysisId}`;
+          return `<div>${escapeHtml(r.path.split("/").pop())}: ${detectados}/${total} motores lo marcan ${detectados ? "sospechoso" : "limpio"} — <a href="${link}" target="_blank" rel="noopener">ver informe completo en VirusTotal</a></div>`;
+        })
+        .join("")}
+    </div>
+  `;
 }
 
 function renderTagCheckboxes(container, tags, linkedIds) {
