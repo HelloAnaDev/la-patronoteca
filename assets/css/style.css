@@ -527,9 +527,12 @@ details.filter-group .filter-options { margin-top: 8px; }
   font-size: 0.82rem;
 }
 @media (max-width: 640px) {
+  /* El botón de Ko-fi (iframe) mide ~65px de alto en su tamaño original.
+     Este botón se queda en unos 2/3 de eso (~43px), un poco más pequeño
+     que Ko-fi, en vez de un porcentaje del tamaño que ya tenía él mismo. */
   .kofi-info-btn {
-    padding: 3px 5px;
-    font-size: 0.27rem;
+    padding: 11px 18px;
+    font-size: 0.95rem;
   }
 }
 
