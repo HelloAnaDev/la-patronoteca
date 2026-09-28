@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guardados — La Patronoteca</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="assets/img/logo.webp" alt="" width="32" height="32">La Patronoteca</a>
+    <nav class="main-nav">
+      <a href="index.html">Inicio</a>
+      <a href="subir.html">Subir un patrón</a>
+      <a href="comunidad.html">Comunidad</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <h1>Tus patrones guardados</h1>
+
+    <div id="saved-logged-out" class="notice info" hidden>
+      Tus favoritos se guardan en tu cuenta, no en el navegador. <a href="#" id="saved-open-account">Inicia sesión o crea una cuenta gratis</a> para verlos aquí desde cualquier dispositivo.
+    </div>
+
+    <div id="saved-count" class="meta" style="margin-top:16px; color:var(--color-text-soft);"></div>
+    <div id="saved-grid" class="pattern-grid"></div>
+    <div id="saved-empty" class="empty-state" hidden>
+      <p>Todavía no has guardado ningún patrón. Dale al botón "Guardar" en cualquier ficha para guardarlo aquí.</p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>La Patronoteca — <a href="aviso-legal.html">Aviso legal</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos de la comunidad</a></p>
+    <p><a href="moderacion.html">Acceso Administración</a></p>
+  </div>
+  <div class="credit-band">
+    <a href="https://linktr.ee/hello.ana.dev" target="_blank" rel="noopener">Sitio web desarrollado por Hello.Ana.Dev</a>
+  </div>
+</footer>
+
+<script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+<script>
+  kofiWidgetOverlay.draw('helloanadev', {
+    'type': 'floating-chat',
+    'floating-chat.donateButton.text': 'Apóyame',
+    'floating-chat.donateButton.background-color': '#ff5f5f',
+    'floating-chat.donateButton.text-color': '#fff'
+  });
+</script>
+<script src="assets/js/kofiInfo.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/demoData.js"></script>
+<script src="assets/js/supabaseClient.js"></script>
+<script src="assets/js/adminNav.js"></script>
+<script src="assets/js/accountNav.js"></script>
+<script src="assets/js/guardados.js"></script>
+</body>
+</html>
