@@ -137,7 +137,7 @@ function renderResults() {
         <span title="Favoritos">${heartIconSmall()} ${pattern.hearts_count || 0}</span>
         ${pattern.good_experience_count ? `<span title="Buena experiencia">😊 ${pattern.good_experience_count}</span>` : ""}
         ${pattern.bad_experience_count ? `<span title="No tan buena experiencia">😞 ${pattern.bad_experience_count}</span>` : ""}
-        ${pattern.comments_count ? `<span title="Comentarios">${commentIconSmall()} ${pattern.comments_count}</span>` : ""}
+        <span title="Comentarios">${commentIconSmall()} ${pattern.comments_count || 0}</span>
         <button type="button" class="card-stats-help" data-legend-trigger>¿Qué significa?</button>
       </div>
     `;

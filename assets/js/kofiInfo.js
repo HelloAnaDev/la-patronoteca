@@ -34,7 +34,7 @@
       <p>Ese botón lleva a <strong>Ko-fi</strong>, una web para hacer pequeñas donaciones voluntarias a quien crea algo online, como esta comunidad.</p>
       <p>Ko-fi organiza las donaciones en forma de "cafés": cada "café" vale <strong>2€ each</strong> (2€ cada uno), y puedes elegir cuántos quieres dar (1 café, 2 cafés...) o directamente escribir la cantidad que quieras. Es solo una forma simpática de decir "te invito a un café", no un café de verdad ni ningún producto.</p>
       <p>Arriba del todo verás dos pestañas: <strong>"One time"</strong> es una donación única, de una sola vez, y <strong>"Monthly"</strong> es mensual (se repite cada mes hasta que la canceles cuando quieras).</p>
-      <p>La Patronoteca es y seguirá siendo gratis para todo el mundo: subir y descargar patrones nunca costará nada. Donar es totalmente opcional y ayuda a compensar las horas de trabajo y mantenimiento que lleva mantener la web funcionando y creciendo.</p>
+      <p><strong>La Patronoteca es y seguirá siendo gratis para todo el mundo:</strong> subir y descargar patrones nunca costará nada. Donar es totalmente opcional y ayuda a compensar las horas de trabajo y mantenimiento que lleva mantener la web funcionando y creciendo.</p>
       <p>No hace falta registrarse en Ko-fi para donar. Si no donas nada, la web sigue funcionando exactamente igual para ti.</p>
     </div>
   `;
