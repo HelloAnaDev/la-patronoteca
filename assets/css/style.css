@@ -64,8 +64,9 @@ header.site-header {
 }
 
 .logo {
+  font-family: "Pacifico", cursive;
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 400;
   color: var(--color-primary-dark);
   display: flex;
   align-items: center;
@@ -520,6 +521,17 @@ details.filter-group .filter-options { margin-top: 8px; }
   z-index: 1;
 }
 
+
+.kofi-info-btn {
+  padding: 8px 14px;
+  font-size: 0.82rem;
+}
+@media (max-width: 640px) {
+  .kofi-info-btn {
+    padding: 4px 7px;
+    font-size: 0.41rem;
+  }
+}
 
 table.simple { width: 100%; border-collapse: collapse; }
 table.simple th, table.simple td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--color-border); }

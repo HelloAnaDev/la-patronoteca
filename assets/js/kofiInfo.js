@@ -16,8 +16,6 @@
     color: #fff;
     border: none;
     border-radius: 999px;
-    padding: 8px 14px;
-    font-size: 0.82rem;
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
@@ -60,7 +58,7 @@
     const iframe = document.querySelector(".floatingchat-container");
     if (!iframe) return;
     const isMobile = window.matchMedia("(max-width: 640px)").matches;
-    const desired = isMobile ? "scale(0.78)" : "";
+    const desired = isMobile ? "scale(0.5)" : "";
     if (iframe.style.transform !== desired) {
       iframe.style.setProperty("transform", desired, desired ? "important" : "");
       iframe.style.setProperty("transform-origin", "bottom left", desired ? "important" : "");
