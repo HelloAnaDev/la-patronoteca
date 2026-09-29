@@ -13,6 +13,27 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+// Sube una imagen nueva a un patrón ya publicado (admin-upload-image usa
+// multipart/form-data, así que no reutiliza callFunction, que manda JSON).
+async function uploadAdminImage(file, patternId) {
+  const { data } = await supabaseClient.auth.getSession();
+  const token = data.session?.access_token;
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("patternId", patternId);
+  const res = await fetch(`${window.PATRONOTECA_CONFIG.FUNCTIONS_URL}/admin-upload-image`, {
+    method: "POST",
+    headers: {
+      apikey: window.PATRONOTECA_CONFIG.SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+  const json = await res.json().catch(() => ({ ok: false, error: "Respuesta inválida del servidor." }));
+  if (!res.ok || !json.ok) throw new Error(json.error || "Error al subir la imagen");
+  return json.path;
+}
+
 // ---------- Ver fotos en grande (lightbox) ----------
 
 const adminLightboxOverlay = document.createElement("div");
@@ -519,7 +540,7 @@ async function loadPublished() {
   const [{ data: patterns }, { data: tags }, { data: links }, { data: comments }] = await Promise.all([
     supabaseClient
       .from("patterns")
-      .select("id, short_description, long_description, cover_image_path, author_name, pattern_tags(tags(id, category, display_name))")
+      .select("id, short_description, long_description, cover_image_path, gallery_paths, author_name, pattern_tags(tags(id, category, display_name))")
       .eq("status", "approved")
       .order("created_at", { ascending: false }),
     supabaseClient.from("tags").select("id, category, display_name").eq("status", "approved").order("display_name"),
@@ -777,6 +798,14 @@ function renderPublishedResults() {
         <div class="tag-editor edit-tecnica"></div>
         <div class="meta" style="margin-top:8px;"><strong>Producto</strong></div>
         <div class="tag-editor edit-producto"></div>
+
+        <div class="meta" style="margin-top:14px;"><strong>Portada</strong></div>
+        <div class="edit-cover-current" style="display:flex; gap:8px; align-items:center; margin:6px 0;"></div>
+        <input type="file" class="edit-cover-file" accept="image/*">
+
+        <div class="meta" style="margin-top:14px;"><strong>Galería</strong></div>
+        <div class="edit-gallery-current" style="display:flex; gap:8px; flex-wrap:wrap; margin:6px 0;"></div>
+        <input type="file" class="edit-gallery-files" accept="image/*" multiple>
       </div>
       <div class="actions">
         <a class="btn btn-outline" href="patron.html?id=${pattern.id}" target="_blank" rel="noopener">Ver ficha</a>
@@ -792,16 +821,89 @@ function renderPublishedResults() {
     renderTagCheckboxes(card.querySelector(".edit-tecnica"), tecnicaTags, linkedIds);
     renderTagCheckboxes(card.querySelector(".edit-producto"), productoTags, linkedIds);
 
+    let removeCoverImage = false;
+    let removeGalleryPaths = [];
+
+    function renderEditCover() {
+      const container = card.querySelector(".edit-cover-current");
+      container.innerHTML = "";
+      if (!pattern.cover_image_path || removeCoverImage) return;
+      const img = document.createElement("img");
+      img.src = publicFileUrl(pattern.cover_image_path);
+      img.style.cssText = "width:70px; height:70px; object-fit:cover; border-radius:8px;";
+      makeImageZoomable(img);
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "btn btn-outline";
+      removeBtn.textContent = "Quitar portada";
+      removeBtn.addEventListener("click", () => {
+        removeCoverImage = true;
+        renderEditCover();
+      });
+      container.appendChild(img);
+      container.appendChild(removeBtn);
+    }
+
+    function renderEditGallery() {
+      const container = card.querySelector(".edit-gallery-current");
+      container.innerHTML = "";
+      (pattern.gallery_paths || [])
+        .filter((p) => !removeGalleryPaths.includes(p))
+        .forEach((path) => {
+          const wrap = document.createElement("div");
+          wrap.style.cssText = "position:relative;";
+          const img = document.createElement("img");
+          img.src = publicFileUrl(path);
+          img.style.cssText = "width:70px; height:70px; object-fit:cover; border-radius:8px;";
+          makeImageZoomable(img);
+          const removeBtn = document.createElement("button");
+          removeBtn.type = "button";
+          removeBtn.textContent = "×";
+          removeBtn.setAttribute("aria-label", "Quitar foto");
+          removeBtn.style.cssText =
+            "position:absolute; top:-6px; right:-6px; background:var(--color-danger); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer;";
+          removeBtn.addEventListener("click", () => {
+            removeGalleryPaths.push(path);
+            renderEditGallery();
+          });
+          wrap.appendChild(img);
+          wrap.appendChild(removeBtn);
+          container.appendChild(wrap);
+        });
+    }
+
     card.querySelector('[data-action="toggle-edit"]').addEventListener("click", () => {
       if (editPanel.hidden) {
         card.querySelector(".edit-short").value = pattern.short_description;
         card.querySelector(".edit-long").value = pattern.long_description || "";
+        removeCoverImage = false;
+        removeGalleryPaths = [];
+        renderEditCover();
+        renderEditGallery();
         editPanel.hidden = false;
         card.querySelector('[data-action="toggle-edit"]').insertAdjacentHTML("afterend", '<button class="btn btn-success" data-action="save">Guardar</button>');
-        card.querySelector('[data-action="save"]').addEventListener("click", async () => {
-          const finalTechniqueTagIds = Array.from(card.querySelectorAll(".edit-tecnica input:checked")).map((el) => el.value);
-          const finalProductTagIds = Array.from(card.querySelectorAll(".edit-producto input:checked")).map((el) => el.value);
+        card.querySelector('[data-action="save"]').addEventListener("click", async (e) => {
+          const saveBtn = e.target;
+          saveBtn.disabled = true;
+          saveBtn.textContent = "Guardando...";
           try {
+            const finalTechniqueTagIds = Array.from(card.querySelectorAll(".edit-tecnica input:checked")).map((el) => el.value);
+            const finalProductTagIds = Array.from(card.querySelectorAll(".edit-producto input:checked")).map((el) => el.value);
+
+            const coverFile = card.querySelector(".edit-cover-file").files[0];
+            let newCoverPath = null;
+            if (coverFile) {
+              const webp = await convertImageToWebp(coverFile);
+              newCoverPath = await uploadAdminImage(webp, pattern.id);
+            }
+
+            const galleryFiles = Array.from(card.querySelector(".edit-gallery-files").files);
+            const newGalleryPaths = [];
+            for (const file of galleryFiles) {
+              const webp = await convertImageToWebp(file);
+              newGalleryPaths.push(await uploadAdminImage(webp, pattern.id));
+            }
+
             await callFunction(
               "moderate-pattern",
               {
@@ -811,6 +913,10 @@ function renderPublishedResults() {
                 longDescription: card.querySelector(".edit-long").value.trim(),
                 finalTechniqueTagIds,
                 finalProductTagIds,
+                removeCoverImage,
+                newCoverPath,
+                removeGalleryPaths,
+                newGalleryPaths,
               },
               true
             );
@@ -818,6 +924,8 @@ function renderPublishedResults() {
             await loadPublished();
           } catch (err) {
             alert("Error al guardar: " + err.message);
+            saveBtn.disabled = false;
+            saveBtn.textContent = "Guardar";
           }
         });
       } else {

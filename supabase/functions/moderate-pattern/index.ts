@@ -170,13 +170,40 @@ Deno.serve(async (req) => {
       }
 
       case "update": {
-        const { shortDescription, longDescription, finalTechniqueTagIds = [], finalProductTagIds = [] } = body;
+        const {
+          shortDescription,
+          longDescription,
+          finalTechniqueTagIds = [],
+          finalProductTagIds = [],
+          removeCoverImage = false,
+          newCoverPath = null,
+          removeGalleryPaths = [],
+          newGalleryPaths = [],
+        } = body;
+
+        let coverImagePath = pattern.cover_image_path;
+        if (removeCoverImage && coverImagePath) {
+          await admin.storage.from("published").remove([coverImagePath]);
+          coverImagePath = null;
+        }
+        if (newCoverPath) {
+          if (coverImagePath) await admin.storage.from("published").remove([coverImagePath]);
+          coverImagePath = newCoverPath;
+        }
+
+        let galleryPaths = ((pattern.gallery_paths ?? []) as string[]).filter((p) => !removeGalleryPaths.includes(p));
+        if (removeGalleryPaths.length > 0) {
+          await admin.storage.from("published").remove(removeGalleryPaths);
+        }
+        galleryPaths = [...galleryPaths, ...newGalleryPaths];
 
         await admin
           .from("patterns")
           .update({
             short_description: shortDescription,
             long_description: longDescription || null,
+            cover_image_path: coverImagePath,
+            gallery_paths: galleryPaths,
           })
           .eq("id", patternId);
 

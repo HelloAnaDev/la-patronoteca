@@ -219,6 +219,19 @@ document.getElementById("gallery-file-input").addEventListener("change", async (
   renderGalleryWidget();
 });
 
+// Si la primera foto que sube en "Patrón" es una imagen, se enseña como
+// referencia junto al campo de portada (por si le sirve tal cual).
+document.getElementById("pattern-files").addEventListener("change", (e) => {
+  const firstImage = Array.from(e.target.files).find((f) => f.type.startsWith("image/"));
+  const suggestion = document.getElementById("cover-suggestion");
+  if (!firstImage) {
+    suggestion.hidden = true;
+    return;
+  }
+  document.getElementById("cover-suggestion-img").src = URL.createObjectURL(firstImage);
+  suggestion.hidden = false;
+});
+
 renderGalleryWidget();
 
 // ---------- Envío del formulario ----------
