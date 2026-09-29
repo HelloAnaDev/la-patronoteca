@@ -216,6 +216,30 @@ Deno.serve(async (req) => {
         return jsonResponse({ ok: true });
       }
 
+      case "create_tag": {
+        const { category, displayName } = body;
+        if ((category !== "tecnica" && category !== "producto") || !displayName || !String(displayName).trim()) {
+          return jsonResponse({ ok: false, error: "Faltan datos." }, 400);
+        }
+        const clean = String(displayName).trim();
+        const name = clean
+          .toUpperCase()
+          .normalize("NFD")
+          .replace(/[̀-ͯ]/g, "");
+
+        const { data: existing } = await admin.from("tags").select("id").eq("category", category).eq("name", name).maybeSingle();
+        if (existing) return jsonResponse({ ok: true, id: existing.id, displayName: clean });
+
+        const { data: inserted, error: insertTagError } = await admin
+          .from("tags")
+          .insert({ category, name, display_name: clean, status: "approved" })
+          .select("id")
+          .single();
+        if (insertTagError) throw insertTagError;
+
+        return jsonResponse({ ok: true, id: inserted.id, displayName: clean });
+      }
+
       case "delete": {
         const paths = [...pattern.pattern_paths, pattern.cover_image_path, ...(pattern.gallery_paths ?? [])].filter(Boolean) as string[];
         if (paths.length > 0) {

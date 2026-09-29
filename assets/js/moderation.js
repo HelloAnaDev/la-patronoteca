@@ -796,8 +796,16 @@ function renderPublishedResults() {
         </div>
         <div class="meta"><strong>Técnica</strong></div>
         <div class="tag-editor edit-tecnica"></div>
+        <div style="display:flex; gap:6px; margin-top:6px;">
+          <input type="text" class="new-tecnica-input" placeholder="Crear técnica nueva..." style="flex:1;">
+          <button type="button" class="btn btn-outline new-tecnica-add">Añadir</button>
+        </div>
         <div class="meta" style="margin-top:8px;"><strong>Producto</strong></div>
         <div class="tag-editor edit-producto"></div>
+        <div style="display:flex; gap:6px; margin-top:6px;">
+          <input type="text" class="new-producto-input" placeholder="Crear producto nuevo..." style="flex:1;">
+          <button type="button" class="btn btn-outline new-producto-add">Añadir</button>
+        </div>
 
         <div class="meta" style="margin-top:14px;"><strong>Portada</strong></div>
         <div class="edit-cover-current" style="display:flex; gap:8px; align-items:center; margin:6px 0;"></div>
@@ -820,6 +828,34 @@ function renderPublishedResults() {
     const linkedIds = new Set(pattern.tags.map((t) => t.id));
     renderTagCheckboxes(card.querySelector(".edit-tecnica"), tecnicaTags, linkedIds);
     renderTagCheckboxes(card.querySelector(".edit-producto"), productoTags, linkedIds);
+
+    async function addNewTag(category, input, tagList, container) {
+      const displayName = input.value.trim();
+      if (!displayName) return;
+      try {
+        const { id, displayName: cleanName } = await callFunction(
+          "moderate-pattern",
+          { action: "create_tag", patternId: pattern.id, category, displayName },
+          true
+        );
+        if (!tagList.some((t) => t.id === id)) {
+          tagList.push({ id, category, display_name: cleanName });
+          tagList.sort((a, b) => a.display_name.localeCompare(b.display_name));
+        }
+        linkedIds.add(id);
+        renderTagCheckboxes(container, tagList, linkedIds);
+        input.value = "";
+      } catch (err) {
+        alert("Error al crear la etiqueta: " + err.message);
+      }
+    }
+
+    card.querySelector(".new-tecnica-add").addEventListener("click", () =>
+      addNewTag("tecnica", card.querySelector(".new-tecnica-input"), tecnicaTags, card.querySelector(".edit-tecnica"))
+    );
+    card.querySelector(".new-producto-add").addEventListener("click", () =>
+      addNewTag("producto", card.querySelector(".new-producto-input"), productoTags, card.querySelector(".edit-producto"))
+    );
 
     let removeCoverImage = false;
     let removeGalleryPaths = [];
